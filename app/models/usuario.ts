@@ -18,11 +18,14 @@ export default class Usuario extends BaseModel {
   @column({ serializeAs: null })
   declare senha: string
 
+  /**
+   * 1- adm - tudo
+   * 2- financeiro - tudo menos transferencias
+   * 3- gerente de unidade - visualização - resumo dos produtos da unidade
+   * 4- colaborador - entrada e saida
+   */
   @column()
   declare tipo: number
-
-  @column()
-  declare estoqueId: number[] | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

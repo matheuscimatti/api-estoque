@@ -16,9 +16,6 @@ export default class Fornecedor extends BaseModel {
   @column()
   declare telefone: string
 
-  @column()
-  declare estoqueId: number
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

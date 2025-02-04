@@ -15,37 +15,6 @@ router
     // Rota para login
     router.post('login', [UsuarioController, 'login'])
 
-    // Rotas para Usuário
-    router.group(() => {
-      router.get('/', [UsuarioController, 'listar'])
-      router.post('/', [UsuarioController, 'criar'])
-      router.get('/:id', [UsuarioController, 'mostrar']).where('id', router.matchers.number())
-      router.put('/:id', [UsuarioController, 'atualizar']).where('id', router.matchers.number())
-      router.delete('/:id', [UsuarioController, 'deletar']).where('id', router.matchers.number())
-    })
-      .prefix('usuario')
-      // .use(middleware.auth())
-
-    // Rotas para Estoque
-    router.group(() => {
-      router.get('/', [EstoqueController, 'listar'])
-      router.post('/', [EstoqueController, 'criar'])
-      router.put('/:id', [EstoqueController, 'atualizar']).where('id', router.matchers.number())
-      router.delete('/:id', [EstoqueController, 'deletar']).where('id', router.matchers.number())
-    })
-      .prefix('estoque')
-      // .use(middleware.auth())
-
-    // Rotas para Cidade
-    router.group(() => {
-      router.get('/', [CidadeController, 'listar'])
-      router.post('/', [CidadeController, 'criar'])
-      router.put('/:id', [CidadeController, 'atualizar']).where('id', router.matchers.number())
-      router.delete('/:id', [CidadeController, 'deletar']).where('id', router.matchers.number())
-    })
-      .prefix('cidade')
-      .use(middleware.auth())
-
     // Rotas para Unidade
     router.group(() => {
       router.get('/', [UnidadeController, 'listar'])
@@ -64,6 +33,17 @@ router
       router.delete('/:id', [SetorController, 'deletar']).where('id', router.matchers.number())
     })
       .prefix('setor')
+      .use(middleware.auth())
+
+    // Rotas para Usuário
+    router.group(() => {
+      router.get('/', [UsuarioController, 'listar'])
+      router.post('/', [UsuarioController, 'criar'])
+      router.get('/:id', [UsuarioController, 'mostrar']).where('id', router.matchers.number())
+      router.put('/:id', [UsuarioController, 'atualizar']).where('id', router.matchers.number())
+      router.delete('/:id', [UsuarioController, 'deletar']).where('id', router.matchers.number())
+    })
+      .prefix('usuario')
       .use(middleware.auth())
 
     // Rotas para Categoria
@@ -97,6 +77,16 @@ router
       .prefix('produto')
       .use(middleware.auth())
 
+    // Rotas para Estoque
+    router.group(() => {
+      router.get('/', [EstoqueController, 'listar'])
+      router.post('/', [EstoqueController, 'criar'])
+      router.put('/:id', [EstoqueController, 'atualizar']).where('id', router.matchers.number())
+      router.delete('/:id', [EstoqueController, 'deletar']).where('id', router.matchers.number())
+    })
+      .prefix('estoque')
+      .use(middleware.auth())
+
     // Rotas para Entrada
     router.group(() => {
       router.get('/', [EntradaSaidaController, 'listarEntrada'])
@@ -113,6 +103,16 @@ router
       router.get('/:id', [EntradaSaidaController, 'mostrarSaida']).where('id', router.matchers.number())
     })
       .prefix('saida')
+      .use(middleware.auth())
+
+    // Rotas para Cidade
+    router.group(() => {
+      router.get('/', [CidadeController, 'listar'])
+      router.post('/', [CidadeController, 'criar'])
+      router.put('/:id', [CidadeController, 'atualizar']).where('id', router.matchers.number())
+      router.delete('/:id', [CidadeController, 'deletar']).where('id', router.matchers.number())
+    })
+      .prefix('cidade')
       .use(middleware.auth())
   })
   .prefix('api/v1')

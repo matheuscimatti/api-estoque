@@ -6,28 +6,39 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.string('data').notNullable()
+      table.timestamp('data').notNullable()
+
+      table.integer('estoque_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('estoque')
+
       table.integer('produto_id')
         .notNullable()
         .unsigned()
         .references('id')
         .inTable('produto')
+        .onUpdate('CASCADE')
+
+      table.integer('setor_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('setor')
+        .onUpdate('CASCADE')
+
       table.float('quantidade').notNullable()
+
       table.integer('usuario_id')
         .notNullable()
         .unsigned()
         .references('id')
         .inTable('usuario')
         .onUpdate('CASCADE')
-      table.integer('estoque_id')
-        .notNullable()
-        .unsigned()
-        .references('id')
-        .inTable('estoque')
-        .onUpdate('CASCADE')
-      table.text('observacao', 'longText')
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+
+      table.string('solicitado_por', 50).notNullable()
+      table.string('observacao')
     })
   }
 

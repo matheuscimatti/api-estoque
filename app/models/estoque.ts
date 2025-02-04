@@ -8,7 +8,16 @@ export default class Estoque extends BaseModel {
   declare id: number
 
   @column()
-  declare nome: string
+  declare produtoId: number
+
+  @column()
+  declare setorId: number
+
+  @column()
+  declare quantidade: number
+
+  @column()
+  declare qtdMin: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

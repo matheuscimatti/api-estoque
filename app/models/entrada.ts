@@ -8,10 +8,16 @@ export default class Entrada extends BaseModel {
   declare id: number
 
   @column()
-  declare data: string
+  declare data: DateTime
+
+  @column()
+  declare estoqueId: number
 
   @column()
   declare produtoId: number
+
+  @column()
+  declare setorId: number
 
   @column()
   declare quantidade: number
@@ -20,7 +26,10 @@ export default class Entrada extends BaseModel {
   declare usuarioId: number
 
   @column()
-  declare estoqueId: number
+  declare solicitadoPor: string
+
+  @column()
+  declare saidaId: number | null
 
   @column()
   declare observacao: string | null
