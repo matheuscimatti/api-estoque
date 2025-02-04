@@ -3,6 +3,8 @@ import Usuario from "#models/usuario";
 import hash from "@adonisjs/core/services/hash";
 import { UsuarioInterface } from "../interfaces/UsuarioInterface.js";
 import UnauthorizedException from "#exceptions/unauthorized_exception";
+import UsuarioSetor from "#models/usuario_setor";
+import db from "@adonisjs/lucid/services/db";
 
 
 export default class UsuarioService {
@@ -24,6 +26,8 @@ export default class UsuarioService {
 
             const token = await Usuario.accessTokens.create(user);
 
+            const permissoes = await db.from('usuario_setor').select('setor_id', 'permissao').where('usuario_id', user.id)
+
             return {
                 status: true,
                 message: `Usuário autenticado com sucesso`,
@@ -31,7 +35,7 @@ export default class UsuarioService {
                     id: user.id,
                     nome: user.nome,
                     tipo: user.tipo,
-                    estoqueId: user.estoqueId,
+                    permissoes,
                     token: token.value!.release(),
                 }
             }
@@ -40,15 +44,22 @@ export default class UsuarioService {
         }
     }
 
-    public async listarUsuarios(estoque?: number) {
+    public async listarUsuarios(setor?: number) {
         try {
-            let query = Usuario.query();
+            let info;
 
-            if (estoque) {
-                query = query.whereRaw('?? @> ?', ['estoque_id', [estoque]])
+            if (setor) {
+                info = await db
+                    .from('usuario')
+                    .innerJoin('usuario_setor', 'usuario_setor.usuario_id', 'usuario.id')
+                    .select('usuario.id', 'usuario.nome', 'usuario.cpf', 'usuario.tipo', 'usuario_setor.permissao')
+                    .distinct('usuario.id')
+                    .where('usuario_setor.setor_id', setor);
+            } else {
+                let query = Usuario.query();
+                info = await query.exec();
             }
 
-            const info = await query.exec();
             return {
                 status: true,
                 message: `${info.length} registro(s) encontrado(s)`,
@@ -61,11 +72,40 @@ export default class UsuarioService {
 
     public async criarUsuario(dados: UsuarioInterface) {
         try {
-            const info = await Usuario.create(dados);
+            const { permissoes, ...dadosUsuario } = dados;
+
+            if (dadosUsuario.tipo === 3 || dadosUsuario.tipo === 4) {
+                if (!permissoes || permissoes.length <= 0) {
+                    throw new Error('Para usuários de tipo 3 ou 4, é obrigatório informar os setores e permissões.')
+                }
+            }
+
+            const info = await Usuario.create(dadosUsuario);
+            const data = info.toJSON();
+            const usuarioId = data.id;
+
+            if (dadosUsuario.tipo === 1 || dadosUsuario.tipo === 2) {
+                const setores = await db.from('setor').select('id')
+                const usuarioSetorData = setores.map((item) => ({
+                    usuarioId,
+                    setorId: item.id,
+                    permissao: dadosUsuario.tipo
+                }));
+                await UsuarioSetor.createMany(usuarioSetorData);
+            }
+            else if ((dadosUsuario.tipo === 3 || dadosUsuario.tipo === 4) && permissoes) {
+                const usuarioSetorData = permissoes.map((item) => ({
+                    usuarioId,
+                    setorId: item.setorId,
+                    permissao: dadosUsuario.tipo === 4 ? 4 : item.permissao,
+                }));
+                await UsuarioSetor.createMany(usuarioSetorData);
+            }
+
             return {
                 status: true,
                 message: 'Registro cadastrado com sucesso',
-                data: info.toJSON(),
+                data,
             }
         } catch (error) {
             throw new Error(error.message, { cause: error })
@@ -74,11 +114,19 @@ export default class UsuarioService {
 
     public async mostrarUsuario(id: number) {
         try {
-            const info = Usuario.findOrFail(id)
+            const user = (await Usuario.findOrFail(id)).toJSON()
+            const permissoes = await db.from('usuario_setor').select('setor_id', 'permissao').where('usuario_id', user.id)
+
             return {
                 status: true,
                 message: `Registro encontrado`,
-                data: (await info).toJSON(),
+                data: {
+                    id: user.id,
+                    nome: user.nome,
+                    cpf: user.cpf,
+                    tipo: user.tipo,
+                    permissoes
+                },
             }
         } catch (error) {
             throw new Error(error.message, { cause: error })
@@ -87,9 +135,38 @@ export default class UsuarioService {
 
     public async atualizarUsuario(id: number, dados: UsuarioInterface) {
         try {
+            const { permissoes, ...dadosUsuario } = dados;
+            if (dadosUsuario.tipo === 3 || dadosUsuario.tipo === 4) {
+                if (!permissoes || permissoes.length <= 0) {
+                    throw new Error('Para usuários de tipo 3 ou 4, é obrigatório informar os setores e permissões.')
+                }
+            }
+            
             const usuario = await Usuario.findOrFail(id)
-            usuario.merge(dados)
+
+            await db.from('usuario_setor').where('usuario_id', id).delete();
+
+            if (dadosUsuario.tipo === 1 || dadosUsuario.tipo === 2) {
+                const setores = await db.from('setor').select('id')
+                const usuarioSetorData = setores.map((item) => ({
+                    usuarioId: id,
+                    setorId: item.id,
+                    permissao: dadosUsuario.tipo
+                }));
+                await UsuarioSetor.createMany(usuarioSetorData);
+            }
+            else if ((dadosUsuario.tipo === 3 || dadosUsuario.tipo === 4) && permissoes) {
+                const usuarioSetorData = permissoes.map((item) => ({
+                    usuarioId: id,
+                    setorId: item.setorId,
+                    permissao: dadosUsuario.tipo === 4 ? 4 : item.permissao,
+                }));
+                await UsuarioSetor.createMany(usuarioSetorData);
+            }
+
+            usuario.merge(dadosUsuario)
             await usuario.save()
+
             return {
                 status: true,
                 message: 'Registro atualizado com sucesso',

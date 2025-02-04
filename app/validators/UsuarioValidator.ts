@@ -4,7 +4,7 @@ import { formatarNumero } from "../utils/format.js";
 
 export const usuarioCreateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255),
+        nome: vine.string().minLength(3).maxLength(100),
         cpf: vine
             .string()
             .use(cpfRule({}))
@@ -17,22 +17,21 @@ export const usuarioCreateValidator = vine.compile(
             .transform((value) => {
                 return formatarNumero(value)
             }),
-        senha: vine.string().minLength(6).maxLength(255),
-        tipo: vine.number().in([1, 2, 3]),
-        estoqueId: vine.array(
-            vine.number().exists(async (db, value) => {
-                const estoque = await db.from('public.estoque').where('id', value).first()
-                return estoque != undefined
-            })
-        )
-        .nullable()
-        .optional(),
+        senha: vine.string().minLength(6).maxLength(20),
+        tipo: vine.number().in([1, 2, 3, 4]),
+        permissoes: vine.array(vine.object({
+            setorId: vine.number().exists(async (db, value) => {
+                const setor = await db.from('public.setor').where('id', value).first()
+                return setor != undefined
+            }),
+            permissao: vine.number().in([1, 2, 3, 4]),
+        })).nullable().optional()
     })
 );
 
 export const usuarioUpdateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255).optional(),
+        nome: vine.string().minLength(3).maxLength(100).optional(),
         cpf: vine
             .string()
             .minLength(11)
@@ -46,16 +45,15 @@ export const usuarioUpdateValidator = vine.compile(
                 return formatarNumero(value)
             })
             .optional(),
-        senha: vine.string().minLength(6).maxLength(255).optional(),
-        tipo: vine.number().in([1, 2, 3]).optional(),
-        estoqueId: vine.array(
-            vine.number().exists(async (db, value) => {
-                const estoque = await db.from('public.estoque').where('id', value).first()
-                return estoque != undefined
-            })
-        )
-        .nullable()
-        .optional(),
+        senha: vine.string().minLength(6).maxLength(20).optional(),
+        tipo: vine.number().in([1, 2, 3, 4]),
+        permissoes: vine.array(vine.object({
+            setorId: vine.number().exists(async (db, value) => {
+                const setor = await db.from('public.setor').where('id', value).first()
+                return setor != undefined
+            }),
+            permissao: vine.number().in([1, 2, 3, 4]),
+        })).nullable().optional()
     })
 );
 
@@ -67,7 +65,7 @@ export const usuarioLogin = vine.compile(
             .transform((value) => {
                 return formatarNumero(value)
             }),
-        
+
         senha: vine.string().minLength(6),
     })
 );
@@ -75,7 +73,7 @@ export const usuarioLogin = vine.compile(
 export const estoqueValidator = vine.compile(
     vine.object({
         nome: vine.string()
-        .minLength(3)
-        .maxLength(255),
+            .minLength(3)
+            .maxLength(255),
     })
 );

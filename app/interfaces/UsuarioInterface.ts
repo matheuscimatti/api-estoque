@@ -4,7 +4,7 @@ export interface UsuarioInterface {
     cpf?: string
     senha?: string
     tipo?: number
-    estoqueId?: number[] | null
+    permissoes?: {setorId: number, permissao: number}[] | null
 }
 
 export interface EstoqueInterface {
