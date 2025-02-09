@@ -7,7 +7,7 @@ export default class Entrada extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column.date()
   declare data: DateTime
 
   @column()

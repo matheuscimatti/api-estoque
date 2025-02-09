@@ -5,7 +5,7 @@ import { formatarNumero } from "../utils/format.js";
 
 export const unidadeCreateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255),
+        nome: vine.string().minLength(3).maxLength(50),
         cnpj: vine
             .string()
             .use(cnpjRule({}))
@@ -22,7 +22,7 @@ export const unidadeCreateValidator = vine.compile(
             .transform((value) => {
                 return formatarNumero(value)
             }),
-        endereco: vine.string().minLength(3).maxLength(255),
+        endereco: vine.string().minLength(3).maxLength(100),
         cidadeId: vine.number().exists(async (db, value) => {
             const cidade = await db.from('public.cidade').where('id', value).first()
             return cidade != undefined
@@ -32,7 +32,7 @@ export const unidadeCreateValidator = vine.compile(
 
 export const unidadeUpdateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255).optional(),
+        nome: vine.string().minLength(3).maxLength(50).optional(),
         cnpj: vine
             .string()
             .use(cnpjRule({}))
@@ -50,7 +50,7 @@ export const unidadeUpdateValidator = vine.compile(
             .transform((value) => {
                 return formatarNumero(value)
             }).optional(),
-        endereco: vine.string().minLength(3).maxLength(255).optional(),
+        endereco: vine.string().minLength(3).maxLength(100).optional(),
         cidadeId: vine.number().exists(async (db, value) => {
             const cidade = await db.from('public.cidade').where('id', value).first()
             return cidade != undefined
@@ -60,21 +60,21 @@ export const unidadeUpdateValidator = vine.compile(
 
 export const cidadeCreateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255),
-        uf: vine.string()
+        nome: vine.string().minLength(3).maxLength(50),
+        uf: vine.string().maxLength(2)
     })
 );
 
 export const cidadeUpdateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255).optional(),
-        uf: vine.string().optional()
+        nome: vine.string().minLength(3).maxLength(50).optional(),
+        uf: vine.string().maxLength(2).optional()
     })
 );
 
 export const setorCreateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255),
+        nome: vine.string().minLength(3).maxLength(50),
         unidadeId: vine.number().exists(async (db, value) => {
             const unidade = await db.from('public.unidade').where('id', value).first()
             return unidade != undefined
@@ -84,7 +84,7 @@ export const setorCreateValidator = vine.compile(
 
 export const setorUpdateValidator = vine.compile(
     vine.object({
-        nome: vine.string().minLength(3).maxLength(255).optional(),
+        nome: vine.string().minLength(3).maxLength(50).optional(),
         unidadeId: vine.number().exists(async (db, value) => {
             const unidade = await db.from('public.unidade').where('id', value).first()
             return unidade != undefined

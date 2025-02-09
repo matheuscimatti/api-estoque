@@ -1,15 +1,20 @@
 import Setor from "#models/setor";
+import db from "@adonisjs/lucid/services/db";
 import { SetorInterface } from "app/interfaces/UnidadeInterface.js";
 
 export default class SetorService {
 
     public async listarSetores(unidade?: number) {
         try {
-            let query = Setor.query();
+            let query = db.query().from('setor');
 
             if (unidade) {
-                query = query.where('unidade_id', unidade)
+                query = query.where('setor.unidade_id', unidade)
             }
+
+            query = query
+                .join('unidade', 'unidade.id', 'setor.unidade_id')
+                .select('setor.id', 'setor.nome', 'setor.unidade_id', 'unidade.nome as unidade')
 
             const info = await query.exec();
             return {

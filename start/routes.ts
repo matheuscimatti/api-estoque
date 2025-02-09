@@ -89,18 +89,16 @@ router
 
     // Rotas para Entrada
     router.group(() => {
-      router.get('/', [EntradaSaidaController, 'listarEntrada'])
+      router.get('/:dataInicio/:dataFim', [EntradaSaidaController, 'listarEntrada'])
       router.post('/', [EntradaSaidaController, 'criarEntrada'])
-      router.get('/:id', [EntradaSaidaController, 'mostrarEntrada']).where('id', router.matchers.number())
     })
       .prefix('entrada')
       .use(middleware.auth())
 
     // Rotas para Saida
     router.group(() => {
-      router.get('/', [EntradaSaidaController, 'listarSaida'])
+      router.get('/:dataInicio/:dataFim', [EntradaSaidaController, 'listarSaida'])
       router.post('/', [EntradaSaidaController, 'criarSaida'])
-      router.get('/:id', [EntradaSaidaController, 'mostrarSaida']).where('id', router.matchers.number())
     })
       .prefix('saida')
       .use(middleware.auth())

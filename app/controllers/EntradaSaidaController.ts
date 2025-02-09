@@ -1,15 +1,23 @@
 import EntradaSaidaService from '#services/EntradaSaidaService';
-import ProdutoService from '#services/ProdutoService';
+import EstoqueService from '#services/EstoqueService';
 import { entradaValidator, saidaValidator } from '#validators/EntradaSaidaValidator';
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class EntradaController {
     private entradaSaidaService = new EntradaSaidaService()
-    private produtoService = new ProdutoService()
+    private estoqueService = new EstoqueService()
 
-    public async listarEntrada({ request, response }: HttpContext) {
-        const { estoque, produto, usuario } = request.qs()
-        const result = await this.entradaSaidaService.listarEntradas(estoque, produto, usuario)
+    public async listarEntrada({ request, response, params }: HttpContext) {
+        const { dataInicio, dataFim } = params;
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dataInicio) || !regex.test(dataFim)) {
+            return response.status(400).send({
+                status: false,
+                message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
+            })
+        }
+        const { setor, produto, usuario, solicitadoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, setor, produto, usuario, solicitadoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -17,9 +25,17 @@ export default class EntradaController {
         })
     }
 
-    public async listarSaida({ request, response }: HttpContext) {
-        const { estoque, produto, usuario, unidade, setor } = request.qs()
-        const result = await this.entradaSaidaService.listarSaidas(estoque, produto, usuario, unidade, setor)
+    public async listarSaida({ request, response, params }: HttpContext) {
+        const { dataInicio, dataFim } = params;
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dataInicio) || !regex.test(dataFim)) {
+            return response.status(400).send({
+                status: false,
+                message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
+            })
+        }
+        const { setor, produto, usuario, retiradoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, setor, produto, usuario, retiradoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -27,15 +43,16 @@ export default class EntradaController {
         })
     }
 
-    public async criarEntrada({ request, response }: HttpContext) {
+    public async criarEntrada({ request, response, auth }: HttpContext) {
         const dados = await entradaValidator.validate(request.all());
+        const userId = (await auth.authenticate()).id;
 
-        const produto = await this.produtoService.mostrarProduto(dados.produtoId);
-        const qtdProduto = produto.data.quantidade;
+        const result = await this.entradaSaidaService.criarEntrada(dados, userId);
 
-        await this.produtoService.atualizarProduto(dados.produtoId, { quantidade: qtdProduto + dados.quantidade });
+        const estoque = await this.estoqueService.mostrarEstoque(dados.estoqueId);
+        const qtdProduto = estoque.data.quantidade;
+        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto + dados.quantidade });
 
-        const result = await this.entradaSaidaService.criarEntrada(dados);
         return response.status(201).send({
             status: true,
             message: result?.message,
@@ -43,12 +60,12 @@ export default class EntradaController {
         })
     }
 
-    public async criarSaida({ request, response }: HttpContext) {
+    public async criarSaida({ request, response, auth }: HttpContext) {
         const dados = await saidaValidator.validate(request.all());
 
-        const produto = await this.produtoService.mostrarProduto(dados.produtoId);
-        const qtdProduto = produto.data.quantidade;
-        const qtdMinProduto = produto.data.qtdMin;
+        const estoque = await this.estoqueService.mostrarEstoque(dados.estoqueId);
+        const qtdProduto = estoque.data.quantidade;
+        const qtdMinProduto = estoque.data.qtdMin;
         const qtdPermitida = qtdProduto - qtdMinProduto;
 
         if (dados.quantidade > qtdPermitida) {
@@ -58,28 +75,13 @@ export default class EntradaController {
             })
         }
 
-        await this.produtoService.atualizarProduto(dados.produtoId, { quantidade: qtdProduto - dados.quantidade });
+        const userId = (await auth.authenticate()).id;
 
-        const result = await this.entradaSaidaService.criarSaida(dados)
+        const result = await this.entradaSaidaService.criarSaida(dados, userId)
+
+        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto - dados.quantidade });
+
         return response.status(201).send({
-            status: true,
-            message: result?.message,
-            data: result?.data,
-        })
-    }
-
-    public async mostrarEntrada({ params, response }: HttpContext) {
-        const result = await this.entradaSaidaService.mostrarEntrada(params.id)
-        return response.status(200).send({
-            status: true,
-            message: result?.message,
-            data: result?.data,
-        })
-    }
-
-    public async mostrarSaida({ params, response }: HttpContext) {
-        const result = await this.entradaSaidaService.mostrarSaida(params.id)
-        return response.status(200).send({
             status: true,
             message: result?.message,
             data: result?.data,
