@@ -5,9 +5,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class FornecedorController {
     private fornecedorService = new FornecedorService()
 
-    public async listar({ request, response }: HttpContext) {
-        const { estoque } = request.qs();
-        const result = await this.fornecedorService.listarFornecedores(estoque)
+    public async listar({ response }: HttpContext) {
+        const result = await this.fornecedorService.listarFornecedores()
         return response.status(200).send({
             status: true,
             message: result?.message,

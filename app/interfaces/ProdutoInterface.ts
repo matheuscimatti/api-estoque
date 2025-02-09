@@ -1,12 +1,8 @@
 export interface ProdutoInterface {
     id?: number
     nome?: string
-    quantidade?: number
-    unidadeMedida?: string
-    fornecedorId?: number
     categoriaId?: number
-    estoqueId?: number
-    qtdMin?: number
+    fornecedorId?: number
     anexo?: string | null
 }
 
@@ -15,11 +11,9 @@ export interface FornecedorInterface {
     nome?: string
     cnpj?: string
     telefone?: string
-    estoqueId?: number
 }
 
 export interface CategoriaInterface {
     id?: number
     nome?: string
-    estoqueId?: number
 }

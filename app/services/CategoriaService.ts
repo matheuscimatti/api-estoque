@@ -3,14 +3,9 @@ import { CategoriaInterface } from "app/interfaces/ProdutoInterface.js";
 
 export default class CategoriaService {
 
-    public async listarCategorias(estoque?: number) {
+    public async listarCategorias() {
         try {
             let query = Categoria.query();
-
-            if (estoque) {
-                query = query.where('estoque_id', estoque)
-            }
-
             const info = await query.exec();
             return {
                 status: true,

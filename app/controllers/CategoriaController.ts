@@ -1,14 +1,12 @@
 import CategoriaService from '#services/CategoriaService';
-import { categoriaCreateValidator, categoriaUpdateValidator } from '#validators/ProdutoValidator';
+import { categoriaValidator } from '#validators/ProdutoValidator';
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CategoriaController {
     private categoriaService = new CategoriaService()
 
-    public async listar({ request, response }: HttpContext) {
-        const { estoque } = request.qs();
-
-        const result = await this.categoriaService.listarCategorias(estoque)
+    public async listar({ response }: HttpContext) {
+        const result = await this.categoriaService.listarCategorias()
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -17,7 +15,7 @@ export default class CategoriaController {
     }
 
     public async criar({ request, response }: HttpContext) {
-        const dados = await categoriaCreateValidator.validate(request.all());
+        const dados = await categoriaValidator.validate(request.all());
 
         const result = await this.categoriaService.criarCategoria(dados)
         return response.status(201).send({
@@ -28,7 +26,7 @@ export default class CategoriaController {
     }
 
     public async atualizar({ params, request, response }: HttpContext) {
-        const payload = await categoriaUpdateValidator.validate(request.all(), {
+        const payload = await categoriaValidator.validate(request.all(), {
             meta: { categoriaId: params.id },
         })
         const result = await this.categoriaService.atualizarCategoria(params.id, payload)

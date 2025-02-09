@@ -1,23 +1,25 @@
 import Produto from "#models/produto";
+import db from "@adonisjs/lucid/services/db";
 import { ProdutoInterface } from "app/interfaces/ProdutoInterface.js";
 
 export default class ProdutoService {
 
-    public async listarProdutos(estoque?: number, categoria?: number, fornecedor?: number) {
+    public async listarProdutos(categoria?: number, fornecedor?: number) {
         try {
-            let query = Produto.query()
-
-            if (estoque) {
-                query = query.where('estoque_id', estoque)
-            }
+            let query = db.query().from('produto');
 
             if (categoria) {
-                query = query.where('categoria_id', categoria)
+                query = query.where('produto.categoria_id', categoria)
             }
 
             if (fornecedor) {
-                query = query.where('fornecedor_id', fornecedor)
+                query = query.where('produto.fornecedor_id', fornecedor)
             }
+
+            query = query
+                .join('categoria', 'categoria.id', 'produto.categoria_id')
+                .join('fornecedor', 'fornecedor.id', 'produto.fornecedor_id')
+                .select('produto.id', 'produto.nome', 'produto.categoria_id', 'categoria.nome as categoria', 'produto.fornecedor_id', 'fornecedor.nome as fornecedor')
 
             const info = await query.exec();
             return {

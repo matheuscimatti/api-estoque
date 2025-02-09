@@ -3,14 +3,9 @@ import { FornecedorInterface } from "app/interfaces/ProdutoInterface.js";
 
 export default class FornecedorService {
 
-    public async listarFornecedores(estoque?: number) {
+    public async listarFornecedores() {
         try {
             let query = Fornecedor.query();
-
-            if (estoque) {
-                query = query.where('estoque_id', estoque)
-            }
-
             const info = await query.exec();
             return {
                 status: true,

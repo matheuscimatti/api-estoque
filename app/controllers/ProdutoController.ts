@@ -6,8 +6,8 @@ export default class ProdutoController {
     private produtoService = new ProdutoService()
 
     public async listar({ request, response }: HttpContext) {
-        const { estoque, categoria, fornecedor } = request.qs()
-        const result = await this.produtoService.listarProdutos(estoque, categoria, fornecedor)
+        const { categoria, fornecedor } = request.qs()
+        const result = await this.produtoService.listarProdutos(categoria, fornecedor)
         return response.status(200).send({
             status: true,
             message: result?.message,

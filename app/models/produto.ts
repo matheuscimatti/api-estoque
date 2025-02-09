@@ -10,9 +10,6 @@ export default class Produto extends BaseModel {
   @column()
   declare nome: string
 
-  // @column()
-  // declare unidadeMedida: string
-
   @column()
   declare categoriaId: number
 
