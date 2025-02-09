@@ -1,13 +1,15 @@
 
 import EstoqueService from '#services/EstoqueService';
-import { estoqueValidator } from '#validators/UsuarioValidator';
+import { estoqueCreateValidator, estoqueUpdateValidator } from '#validators/EstoqueValidator';
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class EstoqueController {
     private estoqueService = new EstoqueService();
 
-    public async listar({ response }: HttpContext) {
-        const result = await this.estoqueService.listarEstoques()
+    public async listar({ request, response }: HttpContext) {
+        const { setor, produto } = request.qs();
+
+        const result = await this.estoqueService.listarEstoques(setor, produto);
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -16,8 +18,8 @@ export default class EstoqueController {
     }
 
     public async criar({ request, response }: HttpContext) {
-        const dados = await estoqueValidator.validate(request.all());
-
+        const dados = await estoqueCreateValidator.validate(request.all());
+        
         const result = await this.estoqueService.criarEstoque(dados)
         return response.status(201).send({
             status: true,
@@ -27,7 +29,7 @@ export default class EstoqueController {
     }
 
     public async atualizar({ params, request, response }: HttpContext) {
-        const payload = await estoqueValidator.validate(request.all(), {
+        const payload = await estoqueUpdateValidator.validate(request.all(), {
             meta: { estoqueId: params.id },
         })
         const result = await this.estoqueService.atualizarEstoque(params.id, payload)

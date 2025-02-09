@@ -6,8 +6,3 @@ export interface UsuarioInterface {
     tipo?: number
     permissoes?: {setorId: number, permissao: number}[] | null
 }
-
-export interface EstoqueInterface {
-    id?: number
-    nome?: string
-}

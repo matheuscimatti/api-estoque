@@ -69,11 +69,3 @@ export const usuarioLogin = vine.compile(
         senha: vine.string().minLength(6),
     })
 );
-
-export const estoqueValidator = vine.compile(
-    vine.object({
-        nome: vine.string()
-            .minLength(3)
-            .maxLength(255),
-    })
-);
