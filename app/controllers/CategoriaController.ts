@@ -1,3 +1,4 @@
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import CategoriaService from '#services/CategoriaService';
 import { categoriaValidator } from '#validators/ProdutoValidator';
 import type { HttpContext } from '@adonisjs/core/http'
@@ -14,7 +15,12 @@ export default class CategoriaController {
         })
     }
 
-    public async criar({ request, response }: HttpContext) {
+    public async criar({ request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const dados = await categoriaValidator.validate(request.all());
 
         const result = await this.categoriaService.criarCategoria(dados)
@@ -25,7 +31,12 @@ export default class CategoriaController {
         })
     }
 
-    public async atualizar({ params, request, response }: HttpContext) {
+    public async atualizar({ params, request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const payload = await categoriaValidator.validate(request.all(), {
             meta: { categoriaId: params.id },
         })
@@ -37,7 +48,12 @@ export default class CategoriaController {
         })
     }
 
-    public async deletar({ params, response }: HttpContext) {
+    public async deletar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario !== 1) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const result = await this.categoriaService.deletarCategoria(params.id)
         return response.status(200).send({
             status: true,

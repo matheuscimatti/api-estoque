@@ -1,3 +1,4 @@
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import ProdutoService from '#services/ProdutoService';
 import { produtoCreateValidator, produtoUpdateValidator } from '#validators/ProdutoValidator';
 import type { HttpContext } from '@adonisjs/core/http'
@@ -15,7 +16,12 @@ export default class ProdutoController {
         })
     }
 
-    public async criar({ request, response }: HttpContext) {
+    public async criar({ request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const dados = await produtoCreateValidator.validate(request.all());
 
         const result = await this.produtoService.criarProduto(dados)
@@ -35,7 +41,12 @@ export default class ProdutoController {
         })
     }
 
-    public async atualizar({ params, request, response }: HttpContext) {
+    public async atualizar({ params, request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const payload = await produtoUpdateValidator.validate(request.all(), {
             meta: { produtoId: params.id },
         })
@@ -47,7 +58,12 @@ export default class ProdutoController {
         })
     }
 
-    public async deletar({ params, response }: HttpContext) {
+    public async deletar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario !== 1) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const result = await this.produtoService.deletarProduto(params.id)
         return response.status(200).send({
             status: true,

@@ -51,7 +51,7 @@ export default class EntradaController {
 
         const estoque = await this.estoqueService.mostrarEstoque(dados.estoqueId);
         const qtdProduto = estoque.data.quantidade;
-        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto + dados.quantidade });
+        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto + dados.quantidade }, userId);
 
         return response.status(201).send({
             status: true,
@@ -79,7 +79,7 @@ export default class EntradaController {
 
         const result = await this.entradaSaidaService.criarSaida(dados, userId)
 
-        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto - dados.quantidade });
+        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto - dados.quantidade }, userId);
 
         return response.status(201).send({
             status: true,

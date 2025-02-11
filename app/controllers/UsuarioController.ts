@@ -1,3 +1,4 @@
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import UsuarioService from '#services/UsuarioService';
 import { usuarioCreateValidator, usuarioLogin, usuarioUpdateValidator } from '#validators/UsuarioValidator';
 import type { HttpContext } from '@adonisjs/core/http'
@@ -26,7 +27,12 @@ export default class UsuarioController {
         })
     }
 
-    public async criar({ request, response }: HttpContext) {
+    public async criar({ request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const dados = await usuarioCreateValidator.validate(request.all());
 
         const result = await this.usuarioService.criarUsuario(dados)
@@ -37,7 +43,12 @@ export default class UsuarioController {
         })
     }
 
-    public async mostrar({ params, response }: HttpContext) {
+    public async mostrar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const result = await this.usuarioService.mostrarUsuario(params.id)
         return response.status(200).send({
             status: true,
@@ -46,7 +57,12 @@ export default class UsuarioController {
         })
     }
 
-    public async atualizar({ params, request, response }: HttpContext) {
+    public async atualizar({ params, request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const payload = await usuarioUpdateValidator.validate(request.all(), {
             meta: { usuarioId: params.id },
         })
@@ -58,7 +74,12 @@ export default class UsuarioController {
         })
     }
 
-    public async deletar({ params, response }: HttpContext) {
+    public async deletar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+        
         const result = await this.usuarioService.deletarUsuario(params.id)
         return response.status(200).send({
             status: true,

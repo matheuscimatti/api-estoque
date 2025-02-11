@@ -1,4 +1,5 @@
 
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import EstoqueService from '#services/EstoqueService';
 import { estoqueCreateValidator, estoqueUpdateValidator } from '#validators/EstoqueValidator';
 import type { HttpContext } from '@adonisjs/core/http'
@@ -17,10 +18,11 @@ export default class EstoqueController {
         })
     }
 
-    public async criar({ request, response }: HttpContext) {
+    public async criar({ request, response, auth }: HttpContext) {
         const dados = await estoqueCreateValidator.validate(request.all());
+        const userId = (await auth.authenticate()).id;
         
-        const result = await this.estoqueService.criarEstoque(dados)
+        const result = await this.estoqueService.criarEstoque(dados, userId)
         return response.status(201).send({
             status: true,
             message: result?.message,
@@ -28,11 +30,13 @@ export default class EstoqueController {
         })
     }
 
-    public async atualizar({ params, request, response }: HttpContext) {
+    public async atualizar({ params, request, response, auth }: HttpContext) {
         const payload = await estoqueUpdateValidator.validate(request.all(), {
             meta: { estoqueId: params.id },
         })
-        const result = await this.estoqueService.atualizarEstoque(params.id, payload)
+        const userId = (await auth.authenticate()).id;
+
+        const result = await this.estoqueService.atualizarEstoque(params.id, payload, userId)
         return response.status(201).send({
             status: true,
             message: result?.message,
@@ -40,7 +44,12 @@ export default class EstoqueController {
         })
     }
 
-    public async deletar({ params, response }: HttpContext) {
+    public async deletar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario !== 1) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const result = await this.estoqueService.deletarEstoque(params.id)
         return response.status(200).send({
             status: true,

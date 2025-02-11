@@ -1,3 +1,4 @@
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import SetorService from '#services/SetorService';
 import { setorCreateValidator, setorUpdateValidator } from '#validators/UnidadeValidator';
 import type { HttpContext } from '@adonisjs/core/http'
@@ -16,7 +17,12 @@ export default class SetorController {
         })
     }
 
-    public async criar({ request, response }: HttpContext) {
+    public async criar({ request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4 || tipoUsuario === 3) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const dados = await setorCreateValidator.validate(request.all());
 
         const result = await this.setorService.criarSetor(dados)
@@ -27,7 +33,12 @@ export default class SetorController {
         })
     }
 
-    public async atualizar({ params, request, response }: HttpContext) {
+    public async atualizar({ params, request, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario === 4 || tipoUsuario === 3) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const payload = await setorUpdateValidator.validate(request.all(), {
             meta: { setorId: params.id },
         })
@@ -39,7 +50,12 @@ export default class SetorController {
         })
     }
 
-    public async deletar({ params, response }: HttpContext) {
+    public async deletar({ params, response, auth }: HttpContext) {
+        const tipoUsuario = (await auth.authenticate()).tipo;
+        if (tipoUsuario !== 1) {
+            throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
+        }
+
         const result = await this.setorService.deletarSetor(params.id)
         return response.status(200).send({
             status: true,

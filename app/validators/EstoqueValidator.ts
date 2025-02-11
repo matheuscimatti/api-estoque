@@ -17,14 +17,6 @@ export const estoqueCreateValidator = vine.compile(
 
 export const estoqueUpdateValidator = vine.compile(
     vine.object({
-        produtoId: vine.number().exists(async (db, value) => {
-            const produto = await db.from('public.produto').where('id', value).first()
-            return produto != undefined
-        }).optional(),
-        setorId: vine.number().exists(async (db, value) => {
-            const setor = await db.from('public.setor').where('id', value).first()
-            return setor != undefined
-        }).optional(),
         quantidade: vine.number().optional(),
         qtdMin: vine.number().optional()
     })

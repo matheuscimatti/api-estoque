@@ -1,3 +1,4 @@
+import UnauthorizedException from "#exceptions/unauthorized_exception";
 import Estoque from "#models/estoque";
 import db from "@adonisjs/lucid/services/db";
 import { EstoqueInterface } from "app/interfaces/EstoqueInterface.js";
@@ -34,8 +35,20 @@ export default class EstoqueService {
         }
     }
 
-    public async criarEstoque(dados: EstoqueInterface) {
+    public async criarEstoque(dados: EstoqueInterface, userId: number) {
         try {
+            if (dados.setorId) {
+                const permissao = await db
+                    .from('usuario_setor')
+                    .select('usuario_setor.permissao')
+                    .where('usuario_setor.usuario_id', userId)
+                    .andWhere('usuario_setor.setor_id', dados.setorId)
+                    .first()
+
+                if (!permissao || permissao?.permissao === '3') {
+                    throw new UnauthorizedException('Usuário sem permissão para criar estoque neste setor', { code: 'UNAUTHORIZED', status: 401 })
+                }
+            }
             if (dados.setorId && dados.produtoId) {
                 const existeEstoque = await db
                     .from('estoque')
@@ -70,8 +83,21 @@ export default class EstoqueService {
         }
     }
 
-    public async atualizarEstoque(id: number, dados: EstoqueInterface) {
+    public async atualizarEstoque(id: number, dados: EstoqueInterface, userId: number) {
         try {
+            if (dados.id) {
+                const permissao = await db
+                    .from('usuario_setor')
+                    .join('estoque', 'estoque.setor_id', 'usuario_setor.setor_id')
+                    .select('usuario_setor.permissao')
+                    .where('usuario_setor.usuario_id', userId)
+                    .andWhere('estoque.id', dados.id)
+                    .first()
+    
+                if (!permissao || permissao?.permissao === '3') {
+                    throw new UnauthorizedException('Usuário sem permissão atualizar este estoque', { code: 'UNAUTHORIZED', status: 401 })
+                }
+            }
             const estoque = await Estoque.findOrFail(id)
             estoque.merge(dados)
             await estoque.save()
