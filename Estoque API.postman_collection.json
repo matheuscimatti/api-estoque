@@ -65,7 +65,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Teste2\",\r\n    \"cnpj\": \"58576435000169\",\r\n    \"cidadeId\": 3\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cnpj\": \"35.084.946/0001-68\",\r\n    \"telefone\": \"(67) 9 9999-9999\",\r\n    \"endereco\": \"Rua do Teste, 1234\",\r\n    \"cidadeId\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,13 +91,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/unidade/2",
+							"raw": "{{_.URL}}/unidade/3",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
 								"unidade",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -146,7 +146,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/setor?unidade=1",
+							"raw": "{{_.URL}}/setor",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -156,7 +156,8 @@
 							"query": [
 								{
 									"key": "unidade",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								}
 							]
 						}
@@ -222,13 +223,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/setor/2",
+							"raw": "{{_.URL}}/setor/3",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
 								"setor",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -277,7 +278,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/usuario?setor=1",
+							"raw": "{{_.URL}}/usuario",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -287,7 +288,8 @@
 							"query": [
 								{
 									"key": "setor",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								}
 							]
 						}
@@ -301,7 +303,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cpf\": \"712.150.430-82\",\r\n    \"senha\": \"123456\",\r\n    \"tipo\": 1,\r\n    \"permissoes\": [\r\n        {\r\n            \"setorId\": 1,\r\n            \"permissao\": 3\r\n        },\r\n        {\r\n            \"setorId\": 3,\r\n            \"permissao\": 4\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cpf\": \"712.150.430-82\",\r\n    \"senha\": \"123456\",\r\n    \"tipo\": 3,\r\n    \"permissoes\": [\r\n        {\r\n            \"setorId\": 1,\r\n            \"permissao\": 3\r\n        },\r\n        {\r\n            \"setorId\": 2,\r\n            \"permissao\": 4\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -345,7 +347,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cpf\": \"04681336157\",\r\n    \"senha\": \"046813\",\r\n    \"tipo\": 3, // obrigatório\r\n    \"permissoes\": [ // obrigatório para tipo 3 e 4. Para tipo 1 ou 2, da permissao em todos os setores conforme tipo\r\n        {\r\n            \"setorId\": 1,\r\n            \"permissao\": 1\r\n        },\r\n        {\r\n            \"setorId\": 3,\r\n            \"permissao\": 3\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cpf\": \"04681336157\",\r\n    \"senha\": \"046813\",\r\n    \"tipo\": 3, // obrigatório\r\n    \"permissoes\": [ // obrigatório para tipo 3 e 4. Para tipo 1 ou 2, dá permissao em todos os setores conforme tipo\r\n        {\r\n            \"setorId\": 1,\r\n            \"permissao\": 1\r\n        },\r\n        {\r\n            \"setorId\": 3,\r\n            \"permissao\": 3\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -569,7 +571,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Teste\",\r\n    \"cnpj\": \"78.910.229/0001-50\",\r\n    \"telefone\": \"(67) 9 9999-9999\"\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste2\",\r\n    \"cnpj\": \"78.910.229/0001-50\",\r\n    \"telefone\": \"(67) 9 9999-9999\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -885,7 +887,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"produtoId\": 1,\r\n    \"setorId\": 1,\r\n    \"quantidade\": 5,\r\n    \"qtdMin\": 1\r\n}",
+							"raw": "{\r\n    \"qtdMin\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -966,7 +968,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/entrada/2025-01-24/2025-01-25",
+							"raw": "{{_.URL}}/entrada/2025-01-24/2025-01-25?setor=1",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -978,8 +980,7 @@
 							"query": [
 								{
 									"key": "setor",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "produto",
@@ -1008,7 +1009,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\": \"2025-01-25\",\r\n    \"estoqueId\": 1,\r\n    \"quantidade\": 3,\r\n    \"solicitadoPor\": \"João Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorSaidaId\": 3\r\n}",
+							"raw": "{\r\n    \"data\": \"2025-01-27\",\r\n    \"estoqueId\": 4,\r\n    \"quantidade\": 2,\r\n    \"solicitadoPor\": \"João Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorSaidaId\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1070,13 +1071,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/saida/2025-01-24/2025-01-26",
+							"raw": "{{_.URL}}/saida/2025-01-26/2025-01-26",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
 								"saida",
-								"2025-01-24",
+								"2025-01-26",
 								"2025-01-26"
 							],
 							"query": [
@@ -1112,7 +1113,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\": \"2025-01-25\",\r\n    \"estoqueId\": 1,\r\n    \"quantidade\": 1,\r\n    \"retiradoPor\": \"José Maria da Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorEntradaId\": 3\r\n}",
+							"raw": "{\r\n    \"data\": \"2025-01-28\",\r\n    \"estoqueId\": 2,\r\n    \"quantidade\": 1,\r\n    \"retiradoPor\": \"José Maria da Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorEntradaId\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1126,6 +1127,76 @@
 							],
 							"path": [
 								"saida"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{_.TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Relatorio",
+			"item": [
+				{
+					"name": "Movimentacoes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{_.URL}}/relatorio/movimentacoes/1/2025-01-25/2025-01-28",
+							"host": [
+								"{{_.URL}}"
+							],
+							"path": [
+								"relatorio",
+								"movimentacoes",
+								"1",
+								"2025-01-25",
+								"2025-01-28"
+							],
+							"query": [
+								{
+									"key": "produto",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
+									"value": "1",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -1192,7 +1263,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Caarapo\",\r\n    \"uf\": \"MS\"\r\n}",
+							"raw": "{\r\n    \"nome\": \"Caarapoo\",\r\n    \"uf\": \"MS\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1244,13 +1315,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/cidade/2",
+							"raw": "{{_.URL}}/cidade/53",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
 								"cidade",
-								"2"
+								"53"
 							]
 						}
 					},
@@ -1297,7 +1368,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"cpf\": \"046.813.361-57\",\r\n    \"senha\": \"046813\"\r\n}",
+					"raw": "{\r\n    \"cpf\": \"046.813.361-57\",\r\n    \"senha\": \"046813\"\r\n\r\n\r\n    // \"cpf\": \"71215043082\",\r\n    // \"senha\": \"123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1347,7 +1418,7 @@
 		},
 		{
 			"key": "_.TOKEN",
-			"value": "oat_NA.YUxNbTlWaW96bXFfSVQwUjAzWEI2RUxhOG9JdVZOLXFuVFBoMEhmcjQ1MDIzODY5",
+			"value": "oat_NA.WWI3eEtsRkUzamNRS090bnFqTVd3T2ZvTmMwNWc0cmY5aktTNWRUaDY3Nzg0NjAyNA",
 			"type": "string"
 		}
 	]
