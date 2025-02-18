@@ -8,9 +8,9 @@ export default class EstoqueController {
     private estoqueService = new EstoqueService();
 
     public async listar({ request, response }: HttpContext) {
-        const { setor, produto } = request.qs();
+        const { setor, produto, categoria } = request.qs();
 
-        const result = await this.estoqueService.listarEstoques(setor, produto);
+        const result = await this.estoqueService.listarEstoques(setor, produto, categoria);
         return response.status(200).send({
             status: true,
             message: result?.message,

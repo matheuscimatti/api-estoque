@@ -9,7 +9,7 @@ import { DateTime } from "luxon";
 
 export default class EntradaSaidaService {
 
-    public async listarEntradas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, usuario?: number, solicitadoPor?: string) {
+    public async listarEntradas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, solicitadoPor?: string) {
         try {
             let query = db.query()
                 .from('entrada')
@@ -30,6 +30,10 @@ export default class EntradaSaidaService {
 
             if (produto) {
                 query = query.where('entrada.produto_id', produto)
+            }
+            
+            if (categoria) {
+                query = query.where('produto.categoria_id', categoria)
             }
 
             if (usuario) {
@@ -139,7 +143,7 @@ export default class EntradaSaidaService {
         }
     }
 
-    public async listarSaidas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, usuario?: number, retiradoPor?: string) {
+    public async listarSaidas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, retiradoPor?: string) {
         try {
             let query = db.query()
                 .from('saida')
@@ -160,6 +164,10 @@ export default class EntradaSaidaService {
 
             if (produto) {
                 query = query.where('saida.produto_id', produto)
+            }
+            
+            if (categoria) {
+                query = query.where('produto.categoria_id', categoria)
             }
 
             if (usuario) {

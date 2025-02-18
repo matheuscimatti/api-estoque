@@ -105,7 +105,7 @@ router
 
     // Rotas para Relatórios
     router.group(() => {
-      router.get('/:setorId/:dataInicio/:dataFim', [EntradaSaidaController, 'relatorioMovimentacoes']).where('setorId', router.matchers.number())
+      router.get('/movimentacoes/:setorId/:dataInicio/:dataFim', [EntradaSaidaController, 'relatorioMovimentacoes']).where('setorId', router.matchers.number())
     })
       .prefix('relatorio')
       .use(middleware.auth())

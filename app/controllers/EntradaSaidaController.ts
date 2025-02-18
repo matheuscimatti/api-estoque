@@ -16,8 +16,8 @@ export default class EntradaController {
                 message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
             })
         }
-        const { setor, produto, usuario, solicitadoPor } = request.qs()
-        const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, setor, produto, usuario, solicitadoPor)
+        const { estoque, setor, produto, categoria, usuario, solicitadoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, solicitadoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -34,8 +34,8 @@ export default class EntradaController {
                 message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
             })
         }
-        const { setor, produto, usuario, retiradoPor } = request.qs()
-        const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, setor, produto, usuario, retiradoPor)
+        const { estoque, setor, produto, categoria, usuario, retiradoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, retiradoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
