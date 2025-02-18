@@ -5,7 +5,7 @@ export default class CidadeService {
 
     public async listarCidades() {
         try {
-            const info = await Cidade.all();
+            const info = (await Cidade.all()).reverse();
             return {
                 status: true,
                 message: `${info.length} registro(s) encontrado(s)`,

@@ -1,11 +1,15 @@
 import Unidade from "#models/unidade";
+import db from "@adonisjs/lucid/services/db";
 import { UnidadeInterface } from "app/interfaces/UnidadeInterface.js";
 
 export default class UnidadeService {
 
     public async listarUnidades(cidade?: number) {
         try {
-            let query = Unidade.query();
+            let query = db.query()
+            .from('unidade')
+            .join('cidade', 'cidade.id', 'unidade.cidade_id')
+            .select('unidade.*', 'cidade.nome as cidade', 'cidade.uf');
 
             if(cidade) {
                 query = query.where('cidade_id', cidade)
