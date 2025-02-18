@@ -18,7 +18,7 @@ export default class UnidadeController {
 
     public async criar({ request, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4 || tipoUsuario === 3) {
+        if (Number(tipoUsuario) === 4 || Number(tipoUsuario) === 3) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 
@@ -34,7 +34,7 @@ export default class UnidadeController {
 
     public async atualizar({ params, request, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4 || tipoUsuario === 3) {
+        if (Number(tipoUsuario) === 4 || Number(tipoUsuario) === 3) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 
@@ -51,7 +51,7 @@ export default class UnidadeController {
 
     public async deletar({ params, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario !== 1) {
+        if (Number(tipoUsuario) !== 1) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 

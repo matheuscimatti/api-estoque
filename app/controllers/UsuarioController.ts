@@ -29,7 +29,7 @@ export default class UsuarioController {
 
     public async criar({ request, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4) {
+        if (Number(tipoUsuario) === 4) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 
@@ -45,7 +45,7 @@ export default class UsuarioController {
 
     public async mostrar({ params, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4) {
+        if (Number(tipoUsuario) === 4) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 
@@ -59,7 +59,7 @@ export default class UsuarioController {
 
     public async atualizar({ params, request, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4) {
+        if (Number(tipoUsuario) === 4) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
 
@@ -76,7 +76,7 @@ export default class UsuarioController {
 
     public async deletar({ params, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
-        if (tipoUsuario === 4) {
+        if (Number(tipoUsuario) === 4) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
         
