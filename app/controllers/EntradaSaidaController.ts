@@ -49,10 +49,6 @@ export default class EntradaController {
 
         const result = await this.entradaSaidaService.criarEntrada(dados, userId);
 
-        const estoque = await this.estoqueService.mostrarEstoque(dados.estoqueId);
-        const qtdProduto = estoque.data.quantidade;
-        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto + dados.quantidade }, userId);
-
         return response.status(201).send({
             status: true,
             message: result?.message,
@@ -79,8 +75,6 @@ export default class EntradaController {
 
         const result = await this.entradaSaidaService.criarSaida(dados, userId)
 
-        await this.estoqueService.atualizarEstoque(dados.estoqueId, { quantidade: qtdProduto - dados.quantidade }, userId);
-
         return response.status(201).send({
             status: true,
             message: result?.message,
@@ -88,9 +82,25 @@ export default class EntradaController {
         })
     }
 
-    // public async relatorioMovimentacoes({ params, response }: HttpContext) {
+    public async relatorioMovimentacoes({ params, request, response }: HttpContext) {
+        const { setorId, dataInicio, dataFim } = params;
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dataInicio) || !regex.test(dataFim)) {
+            return response.status(400).send({
+                status: false,
+                message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
+            })
+        }
 
-    // }
+        const { categoria, produto} = request.qs()
+
+        const result = await this.entradaSaidaService.listarMovimentacoes(setorId, dataInicio, dataFim, categoria, produto);
+        return response.status(200).send({
+            status: true,
+            message: result?.message,
+            data: result?.data,
+        })
+    }
 
     // public async relatorioUnidades({ params, response }: HttpContext) {
 

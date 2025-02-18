@@ -17,7 +17,6 @@ export const estoqueCreateValidator = vine.compile(
 
 export const estoqueUpdateValidator = vine.compile(
     vine.object({
-        quantidade: vine.number().optional(),
         qtdMin: vine.number().optional()
     })
 );

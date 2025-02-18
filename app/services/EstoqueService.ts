@@ -6,7 +6,7 @@ import { EstoqueInterface } from "app/interfaces/EstoqueInterface.js";
 
 export default class EstoqueService {
 
-    public async listarEstoques(setor?: number, produto?: number) {
+    public async listarEstoques(setor?: number, produto?: number, categoria?: number) {
         try {
             let query = db.query().from('estoque');
 
@@ -17,11 +17,16 @@ export default class EstoqueService {
             if (produto) {
                 query = query.where('estoque.produto_id', produto)
             }
+            
+            if (categoria) {
+                query = query.where('produto.categoria_id', categoria)
+            }
 
             query = query
                 .join('setor', 'setor.id', 'estoque.setor_id')
                 .join('produto', 'produto.id', 'estoque.produto_id')
-                .select('estoque.id', 'estoque.setor_id', 'setor.nome as setor', 'estoque.produto_id', 'produto.nome as produto', 'estoque.quantidade', 'estoque.qtd_min')
+                .join('categoria', 'categoria.id', 'produto.categoria_id')
+                .select('estoque.id', 'estoque.setor_id', 'setor.nome as setor', 'produto.categoria_id', 'categoria.nome as categoria', 'estoque.produto_id', 'produto.nome as produto', 'estoque.quantidade', 'estoque.qtd_min')
 
             const info = await query.exec();
 

@@ -9,7 +9,7 @@ import { DateTime } from "luxon";
 
 export default class EntradaSaidaService {
 
-    public async listarEntradas(dataInicio: string, dataFim: string, setor?: number, produto?: number, usuario?: number, solicitadoPor?: string) {
+    public async listarEntradas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, usuario?: number, solicitadoPor?: string) {
         try {
             let query = db.query()
                 .from('entrada')
@@ -18,7 +18,11 @@ export default class EntradaSaidaService {
                 .join('usuario', 'usuario.id', 'entrada.usuario_id')
                 .select('entrada.*', 'produto.nome as produto', 'setor.nome as setor', 'usuario.nome as usuario')
                 .whereBetween('data', [dataInicio, dataFim])
-                .orderBy('data');
+                .orderByRaw('data, created_at');
+
+            if (estoque) {
+                query = query.where('entrada.estoque_id', estoque)
+            }
 
             if (setor) {
                 query = query.where('entrada.setor_id', setor)
@@ -135,7 +139,7 @@ export default class EntradaSaidaService {
         }
     }
 
-    public async listarSaidas(dataInicio: string, dataFim: string, setor?: number, produto?: number, usuario?: number, retiradoPor?: string) {
+    public async listarSaidas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, usuario?: number, retiradoPor?: string) {
         try {
             let query = db.query()
                 .from('saida')
@@ -144,7 +148,11 @@ export default class EntradaSaidaService {
                 .join('usuario', 'usuario.id', 'saida.usuario_id')
                 .select('saida.*', 'produto.nome as produto', 'setor.nome as setor', 'usuario.nome as usuario')
                 .whereBetween('data', [dataInicio, dataFim])
-                .orderBy('data');
+                .orderByRaw('data, created_at');
+
+            if (estoque) {
+                query = query.where('saida.estoque_id', estoque)
+            }
 
             if (setor) {
                 query = query.where('saida.setor_id', setor)
@@ -252,6 +260,69 @@ export default class EntradaSaidaService {
                 status: true,
                 message: 'Registro cadastrado com sucesso',
                 data: info.toJSON(),
+            }
+        } catch (error) {
+            throw new Error(error.message, { cause: error })
+        }
+    }
+
+    public async listarMovimentacoes(setorId: number, dataInicio: string, dataFim: string, categoriaId?: number, produtoId?: number) {
+        try {
+            let query = db.rawQuery(`
+                WITH transacoes AS (
+                    SELECT estoque_id, data, quantidade, 'entrada' AS tipo
+                    FROM entrada
+                    WHERE setor_id = ${setorId}
+                    UNION ALL
+                    SELECT estoque_id, data, quantidade, 'saida' AS tipo
+                    FROM saida
+                    WHERE setor_id = ${setorId}
+                ),
+    
+                qtd_ate_inicio AS (
+                    SELECT
+                        estoque_id,
+                        COALESCE(SUM(CASE WHEN tipo = 'entrada' THEN quantidade ELSE -quantidade END), 0) AS diff
+                    FROM transacoes
+                    WHERE data < '${dataInicio}'
+                    GROUP BY estoque_id
+                ),
+    
+                movimentacao_periodo AS (
+                    SELECT
+                        estoque_id,
+                        SUM(CASE WHEN tipo = 'entrada' THEN quantidade ELSE 0 END) AS entraram,
+                        SUM(CASE WHEN tipo = 'saida' THEN quantidade ELSE 0 END) AS sairam
+                    FROM transacoes
+                    WHERE data BETWEEN '${dataInicio}' AND '${dataFim}'
+                    GROUP BY estoque_id
+                )
+    
+                SELECT
+                    e.id AS estoque_id,
+                    p.id AS produto_id,
+                    p.nome AS produto_nome,
+                    c.id AS categoria_id,
+                    c.nome AS categoria_nome,
+                    (e.qtd_inicial + COALESCE(qi.diff, 0)) AS qtdInicial,
+                    COALESCE(mp.entraram, 0) AS qtdEntrou,
+                    COALESCE(mp.sairam, 0) AS qtdSaiu,
+                    (e.qtd_inicial + COALESCE(qi.diff, 0) + COALESCE(mp.entraram, 0) - COALESCE(mp.sairam, 0)) AS qtdFinal
+                FROM estoque e
+                JOIN produto p ON e.produto_id = p.id
+                JOIN categoria c ON p.categoria_id = c.id
+                LEFT JOIN qtd_ate_inicio qi ON e.id = qi.estoque_id
+                LEFT JOIN movimentacao_periodo mp ON e.id = mp.estoque_id
+                WHERE e.setor_id = ${setorId}
+                ${produtoId ? 'AND e.produto_id = ' + produtoId : ''}
+                ${categoriaId ? 'AND p.categoria_id = ' + categoriaId : ''};
+            `)
+
+            const result = await query.exec();
+            return {
+                status: true,
+                message: `${result.rowCount} registro(s) encontrado(s)`,
+                data: result.rows,
             }
         } catch (error) {
             throw new Error(error.message, { cause: error })

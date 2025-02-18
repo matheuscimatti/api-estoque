@@ -103,6 +103,13 @@ router
       .prefix('saida')
       .use(middleware.auth())
 
+    // Rotas para Relatórios
+    router.group(() => {
+      router.get('/:setorId/:dataInicio/:dataFim', [EntradaSaidaController, 'relatorioMovimentacoes']).where('setorId', router.matchers.number())
+    })
+      .prefix('relatorio')
+      .use(middleware.auth())
+
     // Rotas para Cidade
     router.group(() => {
       router.get('/', [CidadeController, 'listar'])
