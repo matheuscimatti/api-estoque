@@ -278,7 +278,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/usuario",
+							"raw": "{{_.URL}}/usuario?unidade=1",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -286,6 +286,10 @@
 								"usuario"
 							],
 							"query": [
+								{
+									"key": "unidade",
+									"value": "1"
+								},
 								{
 									"key": "setor",
 									"value": "1",
@@ -968,19 +972,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/entrada/2025-01-24/2025-01-25?setor=1",
+							"raw": "{{_.URL}}/entrada?dataInicio=2025-01-24&dataFim=2025-01-28",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
-								"entrada",
-								"2025-01-24",
-								"2025-01-25"
+								"entrada"
 							],
 							"query": [
 								{
+									"key": "dataInicio",
+									"value": "2025-01-24"
+								},
+								{
+									"key": "dataFim",
+									"value": "2025-01-28"
+								},
+								{
 									"key": "setor",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "produto",
@@ -1071,16 +1082,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/saida/2025-01-26/2025-01-26",
+							"raw": "{{_.URL}}/saida?dataInicio=2025-01-24&dataFim=2025-01-28",
 							"host": [
 								"{{_.URL}}"
 							],
 							"path": [
-								"saida",
-								"2025-01-26",
-								"2025-01-26"
+								"saida"
 							],
 							"query": [
+								{
+									"key": "dataInicio",
+									"value": "2025-01-24"
+								},
+								{
+									"key": "dataFim",
+									"value": "2025-01-28"
+								},
 								{
 									"key": "setor",
 									"value": "1",
@@ -1418,7 +1435,7 @@
 		},
 		{
 			"key": "_.TOKEN",
-			"value": "oat_NA.WWI3eEtsRkUzamNRS090bnFqTVd3T2ZvTmMwNWc0cmY5aktTNWRUaDY3Nzg0NjAyNA",
+			"value": "oat_Nw.cnZBeGcyTXBDM3Y5LUdmdWFtMUxqMmxxbHRYaXdNQTY0YVlVRGptcTczNjQ5MzU4OQ",
 			"type": "string"
 		}
 	]

@@ -89,7 +89,7 @@ router
 
     // Rotas para Entrada
     router.group(() => {
-      router.get('/:dataInicio/:dataFim', [EntradaSaidaController, 'listarEntrada'])
+      router.get('/', [EntradaSaidaController, 'listarEntrada'])
       router.post('/', [EntradaSaidaController, 'criarEntrada'])
     })
       .prefix('entrada')
@@ -97,7 +97,7 @@ router
 
     // Rotas para Saida
     router.group(() => {
-      router.get('/:dataInicio/:dataFim', [EntradaSaidaController, 'listarSaida'])
+      router.get('/', [EntradaSaidaController, 'listarSaida'])
       router.post('/', [EntradaSaidaController, 'criarSaida'])
     })
       .prefix('saida')

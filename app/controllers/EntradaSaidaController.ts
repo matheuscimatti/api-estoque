@@ -7,14 +7,16 @@ export default class EntradaController {
     private entradaSaidaService = new EntradaSaidaService()
     private estoqueService = new EstoqueService()
 
-    public async listarEntrada({ request, response, params }: HttpContext) {
-        const { dataInicio, dataFim } = params;
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(dataInicio) || !regex.test(dataFim)) {
-            return response.status(400).send({
-                status: false,
-                message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
-            })
+    public async listarEntrada({ request, response }: HttpContext) {
+        const { dataInicio, dataFim } = request.qs();
+        if (dataInicio || dataFim) {
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!regex.test(dataInicio) || !regex.test(dataFim)) {
+                return response.status(400).send({
+                    status: false,
+                    message: 'dataInicio e dataFim devem estar no formato aaaa-mm-dd'
+                })
+            }
         }
         const { estoque, setor, produto, categoria, usuario, solicitadoPor } = request.qs()
         const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, solicitadoPor)
@@ -25,14 +27,16 @@ export default class EntradaController {
         })
     }
 
-    public async listarSaida({ request, response, params }: HttpContext) {
-        const { dataInicio, dataFim } = params;
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(dataInicio) || !regex.test(dataFim)) {
-            return response.status(400).send({
-                status: false,
-                message: 'dataInicio e dataFim são obrigatórios e devem estar no formato aaaa-mm-dd'
-            })
+    public async listarSaida({ request, response }: HttpContext) {
+        const { dataInicio, dataFim } = request.qs();
+        if (dataInicio || dataFim) {
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!regex.test(dataInicio) || !regex.test(dataFim)) {
+                return response.status(400).send({
+                    status: false,
+                    message: 'dataInicio e dataFim devem estar no formato aaaa-mm-dd'
+                })
+            }
         }
         const { estoque, setor, produto, categoria, usuario, retiradoPor } = request.qs()
         const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, retiradoPor)

@@ -9,7 +9,7 @@ import { DateTime } from "luxon";
 
 export default class EntradaSaidaService {
 
-    public async listarEntradas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, solicitadoPor?: string) {
+    public async listarEntradas(dataInicio?: string, dataFim?: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, solicitadoPor?: string) {
         try {
             let query = db.query()
                 .from('entrada')
@@ -17,8 +17,11 @@ export default class EntradaSaidaService {
                 .join('setor', 'setor.id', 'entrada.setor_id')
                 .join('usuario', 'usuario.id', 'entrada.usuario_id')
                 .select('entrada.*', 'produto.nome as produto', 'setor.nome as setor', 'usuario.nome as usuario')
-                .whereBetween('data', [dataInicio, dataFim])
                 .orderByRaw('data, created_at');
+
+            if (dataInicio && dataFim) {
+                query = query.whereBetween('data', [dataInicio, dataFim])
+            }
 
             if (estoque) {
                 query = query.where('entrada.estoque_id', estoque)
@@ -31,7 +34,7 @@ export default class EntradaSaidaService {
             if (produto) {
                 query = query.where('entrada.produto_id', produto)
             }
-            
+
             if (categoria) {
                 query = query.where('produto.categoria_id', categoria)
             }
@@ -143,7 +146,7 @@ export default class EntradaSaidaService {
         }
     }
 
-    public async listarSaidas(dataInicio: string, dataFim: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, retiradoPor?: string) {
+    public async listarSaidas(dataInicio?: string, dataFim?: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, retiradoPor?: string) {
         try {
             let query = db.query()
                 .from('saida')
@@ -151,8 +154,11 @@ export default class EntradaSaidaService {
                 .join('setor', 'setor.id', 'saida.setor_id')
                 .join('usuario', 'usuario.id', 'saida.usuario_id')
                 .select('saida.*', 'produto.nome as produto', 'setor.nome as setor', 'usuario.nome as usuario')
-                .whereBetween('data', [dataInicio, dataFim])
                 .orderByRaw('data, created_at');
+
+            if (dataInicio && dataFim) {
+                query = query.whereBetween('data', [dataInicio, dataFim])
+            }
 
             if (estoque) {
                 query = query.where('saida.estoque_id', estoque)
@@ -165,7 +171,7 @@ export default class EntradaSaidaService {
             if (produto) {
                 query = query.where('saida.produto_id', produto)
             }
-            
+
             if (categoria) {
                 query = query.where('produto.categoria_id', categoria)
             }
