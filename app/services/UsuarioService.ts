@@ -44,21 +44,39 @@ export default class UsuarioService {
         }
     }
 
-    public async listarUsuarios(setor?: number) {
+    public async listarUsuarios(unidade?: number, setor?: number) {
         try {
-            let info;
+            let query = db.query()
+                .from('usuario')
+                .innerJoin('usuario_setor', 'usuario_setor.usuario_id', 'usuario.id')
+                .innerJoin('setor', 'setor.id', 'usuario_setor.setor_id')
+                .innerJoin('unidade', 'unidade.id', 'setor.unidade_id')
+                .select('usuario.id', 'usuario.nome', 'usuario.cpf', 'usuario.tipo',
+                    db.raw(`
+                        JSON_AGG(
+                            JSON_BUILD_OBJECT(
+                                'unidade_id', unidade.id,
+                                'unidade', unidade.nome,
+                                'setor_id', setor.id,
+                                'setor', setor.nome,
+                                'permissao', usuario_setor.permissao
+                            ) 
+                            ORDER BY unidade.id, setor.id
+                        ) AS permissoes
+                    `)
+                )
+                .groupBy('usuario.id')
+
+            if (unidade) {
+                query = query.where('unidade.id', unidade);
+            }
 
             if (setor) {
-                info = await db
-                    .from('usuario')
-                    .innerJoin('usuario_setor', 'usuario_setor.usuario_id', 'usuario.id')
-                    .select('usuario.id', 'usuario.nome', 'usuario.cpf', 'usuario.tipo', 'usuario_setor.permissao')
-                    .distinct('usuario.id')
-                    .where('usuario_setor.setor_id', setor);
-            } else {
-                let query = Usuario.query();
-                info = await query.exec();
+                query = query.where('setor.id', setor);
             }
+
+            const info = await query.exec();
+            console.log(info)
 
             return {
                 status: true,
@@ -141,7 +159,7 @@ export default class UsuarioService {
                     throw new Error('Para usuários de tipo 3 ou 4, é obrigatório informar os setores e permissões.')
                 }
             }
-            
+
             const usuario = await Usuario.findOrFail(id)
 
             await db.from('usuario_setor').where('usuario_id', id).delete();
