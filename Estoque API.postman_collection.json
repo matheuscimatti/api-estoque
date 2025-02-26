@@ -278,7 +278,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/usuario?unidade=1",
+							"raw": "{{_.URL}}/usuario",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -288,7 +288,8 @@
 							"query": [
 								{
 									"key": "unidade",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "setor",
@@ -372,9 +373,9 @@
 					"response": []
 				},
 				{
-					"name": "Deletar",
+					"name": "Inativar",
 					"request": {
-						"method": "DELETE",
+						"method": "PATCH",
 						"header": [],
 						"url": {
 							"raw": "{{_.URL}}/usuario/2",
@@ -972,7 +973,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/entrada?dataInicio=2025-01-24&dataFim=2025-01-28",
+							"raw": "{{_.URL}}/entrada",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -982,11 +983,13 @@
 							"query": [
 								{
 									"key": "dataInicio",
-									"value": "2025-01-24"
+									"value": "2025-01-24",
+									"disabled": true
 								},
 								{
 									"key": "dataFim",
-									"value": "2025-01-28"
+									"value": "2025-01-28",
+									"disabled": true
 								},
 								{
 									"key": "setor",
@@ -1020,7 +1023,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\": \"2025-01-27\",\r\n    \"estoqueId\": 4,\r\n    \"quantidade\": 2,\r\n    \"solicitadoPor\": \"João Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorSaidaId\": 3\r\n}",
+							"raw": "{\r\n    \"estoqueId\": 1,\r\n    \"quantidade\": 2,\r\n    \"solicitadoPor\": \"João Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorSaidaId\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1130,7 +1133,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\": \"2025-01-28\",\r\n    \"estoqueId\": 2,\r\n    \"quantidade\": 1,\r\n    \"retiradoPor\": \"José Maria da Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorEntradaId\": 3\r\n}",
+							"raw": "{\r\n    \"estoqueId\": 1,\r\n    \"quantidade\": 1,\r\n    \"retiradoPor\": \"José Maria da Silva\"\r\n    // \"observacao\": \"Teste\",\r\n    // \"setorEntradaId\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1192,7 +1195,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/relatorio/movimentacoes/1/2025-01-25/2025-01-28",
+							"raw": "{{_.URL}}/relatorio/movimentacoes/1/2025-02-26/2025-02-26",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -1200,8 +1203,8 @@
 								"relatorio",
 								"movimentacoes",
 								"1",
-								"2025-01-25",
-								"2025-01-28"
+								"2025-02-26",
+								"2025-02-26"
 							],
 							"query": [
 								{
@@ -1435,7 +1438,7 @@
 		},
 		{
 			"key": "_.TOKEN",
-			"value": "oat_Nw.cnZBeGcyTXBDM3Y5LUdmdWFtMUxqMmxxbHRYaXdNQTY0YVlVRGptcTczNjQ5MzU4OQ",
+			"value": "oat_Nw.WWgta3FIQlZXQlNVMGNHbTV5Z3RQZDFCdkwtR2JoZjU5THdRUGh4VTQyMzQyMTIyMzU",
 			"type": "string"
 		}
 	]
