@@ -74,13 +74,15 @@ export default class UsuarioController {
         })
     }
 
-    public async deletar({ params, response, auth }: HttpContext) {
+    public async inativar({ params, response, auth }: HttpContext) {
         const tipoUsuario = (await auth.authenticate()).tipo;
         if (Number(tipoUsuario) === 4) {
             throw new UnauthorizedException('Usuário sem permissão para concluir a ação.', { code: 'UNAUTHORIZED', status: 401 })
         }
+
+        const { id } = params;
         
-        const result = await this.usuarioService.deletarUsuario(params.id)
+        const result = await this.usuarioService.inativarUsuario(id);
         return response.status(200).send({
             status: true,
             message: result.message,

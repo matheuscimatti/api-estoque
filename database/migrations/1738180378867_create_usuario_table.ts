@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.string('cpf', 11).notNullable().unique()
       table.string('senha').notNullable()
       table.enum('tipo', [1, 2, 3, 4]).notNullable()
+      table.boolean('inativado')
+      table.timestamp('inactivated_at')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

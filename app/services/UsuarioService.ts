@@ -13,7 +13,7 @@ export default class UsuarioService {
         try {
             const user = await Usuario.findByOrFail('cpf', cpf)
 
-            if (!user) {
+            if (!user || user.$extras.inativado) {
                 throw new NotFoundException('Usuário não encontrado', {
                     code: 'E_ROW_NOT_FOUND',
                     status: 404,
@@ -24,9 +24,16 @@ export default class UsuarioService {
             if (!isValidPassword)
                 throw new UnauthorizedException('Senha inválida', { code: 'UNAUTHORIZED', status: 401 })
 
+            await db.from('auth_access_tokens').delete().where('tokenable_id', user.id)
+
             const token = await Usuario.accessTokens.create(user);
 
-            const permissoes = await db.from('usuario_setor').select('setor_id', 'permissao').where('usuario_id', user.id)
+            const permissoes = await db
+                .from('usuario_setor')
+                .innerJoin('setor', 'usuario_setor.setor_id', 'setor.id')
+                .innerJoin('unidade', 'setor.unidade_id', 'unidade.id')
+                .select('usuario_setor.setor_id', 'setor.nome as setor', 'usuario_setor.permissao', 'setor.unidade_id', 'unidade.nome as unidade')
+                .where('usuario_setor.usuario_id', user.id)
 
             return {
                 status: true,
@@ -51,7 +58,7 @@ export default class UsuarioService {
                 .innerJoin('usuario_setor', 'usuario_setor.usuario_id', 'usuario.id')
                 .innerJoin('setor', 'setor.id', 'usuario_setor.setor_id')
                 .innerJoin('unidade', 'unidade.id', 'setor.unidade_id')
-                .select('usuario.id', 'usuario.nome', 'usuario.cpf', 'usuario.tipo',
+                .select('usuario.id', 'usuario.nome', 'usuario.cpf', 'usuario.tipo', 'usuario.inativado',
                     db.raw(`
                         JSON_AGG(
                             JSON_BUILD_OBJECT(
@@ -76,7 +83,6 @@ export default class UsuarioService {
             }
 
             const info = await query.exec();
-            console.log(info)
 
             return {
                 status: true,
@@ -195,17 +201,31 @@ export default class UsuarioService {
         }
     }
 
-    public async deletarUsuario(id: number) {
+    public async inativarUsuario(id: number) {
         try {
-            const usuario = await Usuario.findOrFail(id)
-            await usuario.delete()
+            const user = await Usuario.findOrFail(id);
+
+            await db
+                .from('usuario')
+                .where('id', id)
+                .update({
+                    inativado: !user.$extras.inativado,
+                    inactivated_at: !user.$extras.inativado
+                        ? new Date()
+                        : null
+                });
+            
+            await db.from('auth_access_tokens').delete().where('tokenable_id', id)
+
             return {
                 status: true,
-                message: `Registro excluído com sucesso`,
+                message: user.$extras.inativado
+                    ? 'Usuário reativado com sucesso'
+                    : 'Usuário inativado com sucesso',
                 data: null,
-            }
+            };
         } catch (error) {
-            throw new Error(error.message, { cause: error })
+            throw new Error(error.message, { cause: error });
         }
     }
 
