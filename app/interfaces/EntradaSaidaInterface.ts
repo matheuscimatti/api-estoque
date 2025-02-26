@@ -1,6 +1,7 @@
 export interface EntradaInterface {
     id?: number
-    data: string
+    data?: string
+    hora?: string
     estoqueId: number
     produtoId?: number
     setorId?: number
@@ -14,7 +15,8 @@ export interface EntradaInterface {
 
 export interface SaidaInterface {
     id?: number
-    data: string
+    data?: string
+    hora?: string
     estoqueId: number
     produtoId?: number
     setorId?: number

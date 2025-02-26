@@ -2,7 +2,6 @@ import vine from "@vinejs/vine";
 
 export const entradaValidator = vine.compile(
     vine.object({
-        data: vine.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         estoqueId: vine.number().exists(async (db, value) => {
             const estoque = await db.from('public.estoque').where('id', value).first()
             return estoque != undefined
@@ -19,7 +18,6 @@ export const entradaValidator = vine.compile(
 
 export const saidaValidator = vine.compile(
     vine.object({
-        data: vine.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         estoqueId: vine.number().exists(async (db, value) => {
             const estoque = await db.from('public.estoque').where('id', value).first()
             return estoque != undefined

@@ -78,6 +78,8 @@ export default class EntradaSaidaService {
 
             let saidaId = null;
             let dadosSaida;
+            const dataAtual = DateTime.local({ zone: 'America/Cuiaba' });
+
             if (dados.setorSaidaId) {
                 let estoqueSaidaId = await db
                     .from('estoque')
@@ -105,7 +107,8 @@ export default class EntradaSaidaService {
                 }
 
                 dadosSaida = await Saida.create({
-                    data: DateTime.fromISO(dados.data),
+                    data: dataAtual,
+                    hora: dataAtual.toFormat('HH:mm:ss'),
                     estoqueId: Number(estoqueSaidaId),
                     produtoId: permissao.produtoId,
                     setorId: permissao.setorId,
@@ -118,7 +121,8 @@ export default class EntradaSaidaService {
             }
 
             const dadosEntrada = {
-                data: DateTime.fromISO(dados.data),
+                data: dataAtual,
+                hora: dataAtual.toFormat('HH:mm:ss'),
                 estoqueId: dados.estoqueId,
                 produtoId: permissao.produtoId,
                 setorId: permissao.setorId,
@@ -215,6 +219,8 @@ export default class EntradaSaidaService {
 
             let entradaId = null;
             let dadosEntrada;
+            const dataAtual = DateTime.local({ zone: 'America/Cuiaba' });
+
             if (dados.setorEntradaId) {
                 let estoqueEntradaId = await db
                     .from('estoque')
@@ -239,7 +245,8 @@ export default class EntradaSaidaService {
                 }
 
                 dadosEntrada = await Entrada.create({
-                    data: DateTime.fromISO(dados.data),
+                    data: dataAtual,
+                    hora: dataAtual.toFormat('HH:mm:ss'),
                     estoqueId: Number(estoqueEntradaId),
                     produtoId: permissao.produtoId,
                     setorId: permissao.setorId,
@@ -252,7 +259,8 @@ export default class EntradaSaidaService {
             }
 
             const dadosSaida = {
-                data: DateTime.fromISO(dados.data),
+                data: dataAtual,
+                hora: dataAtual.toFormat('HH:mm:ss'),
                 estoqueId: dados.estoqueId,
                 produtoId: permissao.produtoId,
                 setorId: permissao.setorId,

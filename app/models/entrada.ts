@@ -11,6 +11,9 @@ export default class Entrada extends BaseModel {
   declare data: DateTime
 
   @column()
+  declare hora: string
+
+  @column()
   declare estoqueId: number
 
   @column()

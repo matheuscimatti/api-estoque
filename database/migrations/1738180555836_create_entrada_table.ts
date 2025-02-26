@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.date('data').notNullable()
+      table.time('hora').notNullable()
 
       table.integer('estoque_id')
         .notNullable()
