@@ -6,6 +6,7 @@ export interface EntradaInterface {
     produtoId?: number
     setorId?: number
     quantidade: number
+    valorProduto?: number
     usuarioId?: number
     solicitadoPor: string
     observacao?: string | null
@@ -21,6 +22,7 @@ export interface SaidaInterface {
     produtoId?: number
     setorId?: number
     quantidade: number
+    valorProduto?: number
     usuarioId?: number
     retiradoPor: string
     observacao?: string | null

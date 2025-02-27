@@ -26,6 +26,9 @@ export default class Saida extends BaseModel {
   declare quantidade: number
 
   @column()
+  declare valorProduto: number
+
+  @column()
   declare usuarioId: number
 
   @column()

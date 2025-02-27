@@ -31,6 +31,8 @@ export default class extends BaseSchema {
 
       table.float('quantidade').notNullable()
 
+      table.float('valor_produto')
+
       table.integer('usuario_id')
         .notNullable()
         .unsigned()

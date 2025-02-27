@@ -13,7 +13,7 @@ export const produtoCreateValidator = vine.compile(
             const fornecedor = await db.from('public.fornecedor').where('id', value).first()
             return fornecedor != undefined
         }),
-        valor: vine.number(),
+        valor: vine.number().positive(),
         anexo: vine.string().nullable().optional()
     })
 );
@@ -29,7 +29,7 @@ export const produtoUpdateValidator = vine.compile(
             const fornecedor = await db.from('public.fornecedor').where('id', value).first()
             return fornecedor != undefined
         }).optional(),
-        valor: vine.number().optional(),
+        valor: vine.number().positive().optional(),
         anexo: vine.string().nullable().optional()
     })
 );

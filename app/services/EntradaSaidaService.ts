@@ -67,7 +67,8 @@ export default class EntradaSaidaService {
             const permissao = await db
                 .from('usuario_setor')
                 .join('estoque', 'estoque.setor_id', 'usuario_setor.setor_id')
-                .select('usuario_setor.permissao', 'estoque.setor_id as setorId', 'estoque.produto_id as produtoId')
+                .join('produto', 'produto.id', 'estoque.produto_id')
+                .select('usuario_setor.permissao', 'estoque.setor_id as setorId', 'estoque.produto_id as produtoId', 'produto.valor as valorProduto')
                 .where('usuario_setor.usuario_id', userId)
                 .andWhere('estoque.id', dados.estoqueId)
                 .first()
@@ -113,6 +114,7 @@ export default class EntradaSaidaService {
                     produtoId: permissao.produtoId,
                     setorId: permissao.setorId,
                     quantidade: dados.quantidade,
+                    valorProduto: permissao.valorProduto,
                     usuarioId: userId,
                     retiradoPor: dados.solicitadoPor,
                     observacao: dados.observacao ?? null
@@ -127,6 +129,7 @@ export default class EntradaSaidaService {
                 produtoId: permissao.produtoId,
                 setorId: permissao.setorId,
                 quantidade: dados.quantidade,
+                valorProduto: permissao.valorProduto,
                 usuarioId: userId,
                 solicitadoPor: dados.solicitadoPor,
                 observacao: dados.observacao ?? null,
@@ -208,7 +211,8 @@ export default class EntradaSaidaService {
             const permissao = await db
                 .from('usuario_setor')
                 .join('estoque', 'estoque.setor_id', 'usuario_setor.setor_id')
-                .select('usuario_setor.permissao', 'estoque.setor_id as setorId', 'estoque.produto_id as produtoId')
+                .join('produto', 'produto.id', 'estoque.produto_id')
+                .select('usuario_setor.permissao', 'estoque.setor_id as setorId', 'estoque.produto_id as produtoId', 'produto.valor as valorProduto')
                 .where('usuario_setor.usuario_id', userId)
                 .andWhere('estoque.id', dados.estoqueId)
                 .first()
@@ -251,6 +255,7 @@ export default class EntradaSaidaService {
                     produtoId: permissao.produtoId,
                     setorId: permissao.setorId,
                     quantidade: dados.quantidade,
+                    valorProduto: permissao.valorProduto,
                     usuarioId: userId,
                     solicitadoPor: dados.retiradoPor,
                     observacao: dados.observacao ?? null
@@ -265,6 +270,7 @@ export default class EntradaSaidaService {
                 produtoId: permissao.produtoId,
                 setorId: permissao.setorId,
                 quantidade: dados.quantidade,
+                valorProduto: permissao.valorProduto,
                 usuarioId: userId,
                 retiradoPor: dados.retiradoPor,
                 observacao: dados.observacao ?? null,

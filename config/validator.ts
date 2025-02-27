@@ -14,6 +14,7 @@ export const messages = new SimpleMessagesProvider({
   'fixedLength': 'O campo {{field}} deve ter um tamanho de {{size}} caracteres',
   'regex': 'O campo {{field}} informado está no formato inválido',
   'in': 'O valor do campo {{field}} deve ser um dos seguintes: {{values}}',
+  'positive': 'O campo {{field}} deve ser positivo'
 })
 
 vine.messagesProvider = messages

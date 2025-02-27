@@ -26,7 +26,7 @@ export default class EstoqueService {
                 .join('setor', 'setor.id', 'estoque.setor_id')
                 .join('produto', 'produto.id', 'estoque.produto_id')
                 .join('categoria', 'categoria.id', 'produto.categoria_id')
-                .select('estoque.id', 'estoque.setor_id', 'setor.nome as setor', 'produto.categoria_id', 'categoria.nome as categoria', 'estoque.produto_id', 'produto.nome as produto', 'estoque.quantidade', 'estoque.qtd_min')
+                .select('estoque.id', 'estoque.setor_id', 'setor.nome as setor', 'produto.categoria_id', 'categoria.nome as categoria', 'estoque.produto_id', 'produto.nome as produto', 'estoque.quantidade', 'estoque.qtd_min', 'produto.valor as valor_produto')
 
             const info = await query.exec();
 
