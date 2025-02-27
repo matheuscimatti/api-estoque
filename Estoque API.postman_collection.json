@@ -711,7 +711,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Mouse\",\r\n    \"categoriaId\": 1,\r\n    \"fornecedorId\": 1\r\n}",
+							"raw": "{\r\n    \"nome\": \"Mouse\",\r\n    \"categoriaId\": 1,\r\n    \"fornecedorId\": 1,\r\n    \"valor\": 50.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -755,7 +755,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Teste2\",\r\n    \"categoriaId\": 1,\r\n    \"fornecedorId\": 1\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste2\",\r\n    \"categoriaId\": 1,\r\n    \"fornecedorId\": 1,\r\n    \"valor\": 55\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1085,7 +1085,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{_.URL}}/saida?dataInicio=2025-01-24&dataFim=2025-01-28",
+							"raw": "{{_.URL}}/saida",
 							"host": [
 								"{{_.URL}}"
 							],
@@ -1095,11 +1095,13 @@
 							"query": [
 								{
 									"key": "dataInicio",
-									"value": "2025-01-24"
+									"value": "2025-01-24",
+									"disabled": true
 								},
 								{
 									"key": "dataFim",
-									"value": "2025-01-28"
+									"value": "2025-01-28",
+									"disabled": true
 								},
 								{
 									"key": "setor",
@@ -1438,7 +1440,7 @@
 		},
 		{
 			"key": "_.TOKEN",
-			"value": "oat_Nw.WWgta3FIQlZXQlNVMGNHbTV5Z3RQZDFCdkwtR2JoZjU5THdRUGh4VTQyMzQyMTIyMzU",
+			"value": "oat_MTA.ejNxRG9CTFFoQkFsWFFmNnhwWWdkTUJadkpSdTZHUlY1UFNNOFNfODI1NjE4NDUxMzQ",
 			"type": "string"
 		}
 	]
