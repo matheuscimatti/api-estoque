@@ -17,6 +17,9 @@ export default class Produto extends BaseModel {
   declare fornecedorId: number
 
   @column()
+  declare valor: number
+
+  @column()
   declare anexo: string | null
 
   @column.dateTime({ autoCreate: true })

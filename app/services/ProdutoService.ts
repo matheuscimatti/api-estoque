@@ -19,7 +19,7 @@ export default class ProdutoService {
             query = query
                 .join('categoria', 'categoria.id', 'produto.categoria_id')
                 .join('fornecedor', 'fornecedor.id', 'produto.fornecedor_id')
-                .select('produto.id', 'produto.nome', 'produto.categoria_id', 'categoria.nome as categoria', 'produto.fornecedor_id', 'fornecedor.nome as fornecedor')
+                .select('produto.id', 'produto.nome', 'produto.categoria_id', 'categoria.nome as categoria', 'produto.fornecedor_id', 'fornecedor.nome as fornecedor', 'produto.valor')
 
             const info = await query.exec();
             return {

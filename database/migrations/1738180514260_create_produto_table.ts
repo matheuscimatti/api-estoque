@@ -21,6 +21,10 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('fornecedor')
 
+      table.float('valor')
+        .notNullable()
+        .unsigned()
+
       table.string('anexo')
 
       table.timestamp('created_at')

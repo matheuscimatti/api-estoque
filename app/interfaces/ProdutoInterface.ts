@@ -3,6 +3,7 @@ export interface ProdutoInterface {
     nome?: string
     categoriaId?: number
     fornecedorId?: number
+    valor?: number
     anexo?: string | null
 }
 
