@@ -9,7 +9,7 @@ import { DateTime } from "luxon";
 
 export default class EntradaSaidaService {
 
-    public async listarEntradas(dataInicio?: string, dataFim?: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, solicitadoPor?: string) {
+    public async listarEntradas(dataInicio?: string, dataFim?: string, estoque?: number, unidade?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, solicitadoPor?: string) {
         try {
             let query = db.query()
                 .from('entrada')
@@ -25,6 +25,10 @@ export default class EntradaSaidaService {
 
             if (estoque) {
                 query = query.where('entrada.estoque_id', estoque)
+            }
+
+            if (unidade) {
+                query = query.where('setor.unidade_id', unidade)
             }
 
             if (setor) {
@@ -153,7 +157,7 @@ export default class EntradaSaidaService {
         }
     }
 
-    public async listarSaidas(dataInicio?: string, dataFim?: string, estoque?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, retiradoPor?: string) {
+    public async listarSaidas(dataInicio?: string, dataFim?: string, estoque?: number, unidade?: number, setor?: number, produto?: number, categoria?: number, usuario?: number, retiradoPor?: string) {
         try {
             let query = db.query()
                 .from('saida')
@@ -169,6 +173,10 @@ export default class EntradaSaidaService {
 
             if (estoque) {
                 query = query.where('saida.estoque_id', estoque)
+            }
+
+            if (unidade) {
+                query = query.where('setor.unidade_id', unidade)
             }
 
             if (setor) {
@@ -306,7 +314,7 @@ export default class EntradaSaidaService {
                     FROM saida
                     WHERE setor_id = ${setorId}
                 ),
-    
+
                 qtd_ate_inicio AS (
                     SELECT
                         estoque_id,
@@ -315,7 +323,7 @@ export default class EntradaSaidaService {
                     WHERE data < '${dataInicio}'
                     GROUP BY estoque_id
                 ),
-    
+
                 movimentacao_periodo AS (
                     SELECT
                         estoque_id,
@@ -325,7 +333,7 @@ export default class EntradaSaidaService {
                     WHERE data BETWEEN '${dataInicio}' AND '${dataFim}'
                     GROUP BY estoque_id
                 )
-    
+
                 SELECT
                     e.id AS estoque_id,
                     p.id AS produto_id,

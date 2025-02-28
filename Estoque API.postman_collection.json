@@ -992,12 +992,27 @@
 									"disabled": true
 								},
 								{
+									"key": "estoque",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "unidade",
+									"value": "1",
+									"disabled": true
+								},
+								{
 									"key": "setor",
 									"value": "1",
 									"disabled": true
 								},
 								{
 									"key": "produto",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
 									"value": "1",
 									"disabled": true
 								},
@@ -1104,12 +1119,27 @@
 									"disabled": true
 								},
 								{
+									"key": "estoque",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "unidade",
+									"value": "1",
+									"disabled": true
+								},
+								{
 									"key": "setor",
 									"value": "1",
 									"disabled": true
 								},
 								{
 									"key": "produto",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
 									"value": "1",
 									"disabled": true
 								},

@@ -18,8 +18,8 @@ export default class EntradaController {
                 })
             }
         }
-        const { estoque, setor, produto, categoria, usuario, solicitadoPor } = request.qs()
-        const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, solicitadoPor)
+        const { estoque, unidade, setor, produto, categoria, usuario, solicitadoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarEntradas(dataInicio, dataFim, estoque, unidade, setor, produto, categoria, usuario, solicitadoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
@@ -38,8 +38,8 @@ export default class EntradaController {
                 })
             }
         }
-        const { estoque, setor, produto, categoria, usuario, retiradoPor } = request.qs()
-        const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, estoque, setor, produto, categoria, usuario, retiradoPor)
+        const { estoque, unidade, setor, produto, categoria, usuario, retiradoPor } = request.qs()
+        const result = await this.entradaSaidaService.listarSaidas(dataInicio, dataFim, estoque, unidade, setor, produto, categoria, usuario, retiradoPor)
         return response.status(200).send({
             status: true,
             message: result?.message,
