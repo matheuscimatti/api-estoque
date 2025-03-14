@@ -60,7 +60,7 @@ export default class EstoqueService {
                     .where('setor_id', dados.setorId)
                     .andWhere('produto_id', dados.produtoId);
                 if (existeEstoque.length > 0) {
-                    throw new Error(`Já existe um estoque deste produto no setor informado. ID: ${existeEstoque[0].id}`)
+                    throw new Error(`Já existe um estoque deste produto no setor informado.`)
                 }
             }
 

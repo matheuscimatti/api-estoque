@@ -866,7 +866,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"produtoId\": 1,\r\n    \"setorId\": 1,\r\n    \"quantidade\": 5,\r\n    \"qtdMin\": 1\r\n}",
+							"raw": "{\r\n    \"produtoId\": 2,\r\n    \"setorId\": 1,\r\n    \"quantidade\": 5,\r\n    \"qtdMin\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1247,6 +1247,67 @@
 								{
 									"key": "categoria",
 									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{_.TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "buscar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{_.URL}}/dashboard",
+							"host": [
+								"{{_.URL}}"
+							],
+							"path": [
+								"dashboard"
+							],
+							"query": [
+								{
+									"key": "setorId",
+									"value": "3",
 									"disabled": true
 								}
 							]

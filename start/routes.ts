@@ -1,5 +1,6 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const DashboardController = () => import('#controllers/DashboardController')
 const UsuarioController = () => import('#controllers/UsuarioController')
 const EstoqueController = () => import('#controllers/EstoqueController')
 const UnidadeController = () => import('#controllers/UnidadeController')
@@ -119,6 +120,12 @@ router
       router.delete('/:id', [CidadeController, 'deletar']).where('id', router.matchers.number())
     })
       .prefix('cidade')
+      .use(middleware.auth())
+
+    router.group(() => {
+      router.get('/', [DashboardController, 'buscarInformacoes'])
+    })
+      .prefix('dashboard')
       .use(middleware.auth())
   })
   .prefix('api/v1')
